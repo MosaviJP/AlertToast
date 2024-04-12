@@ -31,6 +31,7 @@ struct ActivityIndicator: UIViewRepresentable {
     func makeUIView(context: UIViewRepresentableContext<ActivityIndicator>) -> UIActivityIndicatorView {
         
         let progressView = UIActivityIndicatorView(style: .large)
+        progressView.color = .white
         progressView.startAnimating()
         
         return progressView
