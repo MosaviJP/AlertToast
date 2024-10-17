@@ -308,7 +308,7 @@ public struct AlertToast: View{
                         if subTitle != nil{
                             Text(LocalizedStringKey(subTitle ?? ""))
                                 .font(style?.subTitleFont ?? Font.footnote)
-                                .opacity(0.7)
+//                                .opacity(0.7)
                                 .multilineTextAlignment(.center)
                                 .textColor(style?.subtitleColor ?? nil)
                         }
@@ -346,6 +346,7 @@ public struct AlertToast: View{
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .scaledToFit()
+                    .frame(maxWidth: 50, maxHeight: 50, alignment: .center)
                     .foregroundColor(color)
                     .padding(.bottom)
                 Spacer()
@@ -355,6 +356,7 @@ public struct AlertToast: View{
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .scaledToFit()
+                    .frame(maxWidth: 50, maxHeight: 50, alignment: .center)
                     .foregroundColor(color)
                     .padding(.bottom)
                 Spacer()
@@ -374,7 +376,7 @@ public struct AlertToast: View{
                 if subTitle != nil{
                     Text(LocalizedStringKey(subTitle ?? ""))
                         .font(style?.subTitleFont ?? Font.footnote)
-                        .opacity(0.7)
+//                        .opacity(0.7)
                         .multilineTextAlignment(.center)
                         .textColor(style?.subtitleColor ?? nil)
                 }
