@@ -11,7 +11,7 @@
 import SwiftUI
 import Combine
 
-@available(iOS 13, macOS 11, *)
+@available(iOS 14, macOS 11, *)
 fileprivate struct AnimatedCheckmark: View {
     
     ///Checkmark color
@@ -46,7 +46,7 @@ fileprivate struct AnimatedCheckmark: View {
     }
 }
 
-@available(iOS 13, macOS 11, *)
+@available(iOS 14, macOS 11, *)
 fileprivate struct AnimatedXmark: View {
     
     ///xmark color
@@ -88,7 +88,7 @@ fileprivate struct AnimatedXmark: View {
 
 //MARK: - Main View
 
-@available(iOS 13, macOS 11, *)
+@available(iOS 14, macOS 11, *)
 public struct AlertToast: View{
     
     public enum BannerAnimation{
@@ -137,12 +137,13 @@ public struct AlertToast: View{
                    titleColor: Color? = nil,
                    subTitleColor: Color? = nil,
                    titleFont: Font? = nil,
-                   subTitleFont: Font? = nil)
+                   subTitleFont: Font? = nil,
+                   activityIndicatorColor: Color? = nil)
         
         ///Get background color
         var backgroundColor: Color? {
             switch self{
-            case .style(backgroundColor: let color, _, _, _, _):
+            case .style(backgroundColor: let color, _, _, _, _, _):
                 return color
             }
         }
@@ -150,7 +151,7 @@ public struct AlertToast: View{
         /// Get title color
         var titleColor: Color? {
             switch self{
-            case .style(_,let color, _,_,_):
+            case .style(_,let color, _,_,_,_):
                 return color
             }
         }
@@ -158,7 +159,7 @@ public struct AlertToast: View{
         /// Get subTitle color
         var subtitleColor: Color? {
             switch self{
-            case .style(_,_, let color, _,_):
+            case .style(_,_, let color, _,_,_):
                 return color
             }
         }
@@ -166,7 +167,7 @@ public struct AlertToast: View{
         /// Get title font
         var titleFont: Font? {
             switch self {
-            case .style(_, _, _, titleFont: let font, _):
+            case .style(_, _, _, titleFont: let font, _,_):
                 return font
             }
         }
@@ -174,8 +175,15 @@ public struct AlertToast: View{
         /// Get subTitle font
         var subTitleFont: Font? {
             switch self {
-            case .style(_, _, _, _, subTitleFont: let font):
+            case .style(_, _, _, _, subTitleFont: let font,_):
                 return font
+            }
+        }
+
+        var activityIndicatorColor: Color? {
+            switch self {
+            case .style(_, _, _, _, _, let color):
+                return color
             }
         }
     }
@@ -246,7 +254,7 @@ public struct AlertToast: View{
                             .renderingMode(.template)
                             .foregroundColor(color)
                     case .loading:
-                        ActivityIndicator()
+                         ActivityIndicator(color: style?.activityIndicatorColor ?? .white)
                     case .regular:
                         EmptyView()
                     }
@@ -255,8 +263,8 @@ public struct AlertToast: View{
                         .font(style?.titleFont ?? Font.headline.bold())
                 }
                 
-                if subTitle != nil{
-                    Text(LocalizedStringKey(subTitle!))
+                if let subTitle = subTitle {
+                    Text(LocalizedStringKey(subTitle))
                         .font(style?.subTitleFont ?? Font.subheadline)
                 }
             }
@@ -292,21 +300,21 @@ public struct AlertToast: View{
                         .hudModifier()
                         .foregroundColor(color)
                 case .loading:
-                    ActivityIndicator()
+                    ActivityIndicator(color: style?.activityIndicatorColor ?? .white)
                 case .regular:
                     EmptyView()
                 }
                 
                 if title != nil || subTitle != nil{
                     VStack(alignment: type == .regular ? .center : .leading, spacing: 2){
-                        if title != nil{
-                            Text(LocalizedStringKey(title ?? ""))
+                        if let title = title {
+                            Text(LocalizedStringKey(title))
                                 .font(style?.titleFont ?? Font.body.bold())
                                 .multilineTextAlignment(.center)
                                 .textColor(style?.titleColor ?? nil)
                         }
-                        if subTitle != nil{
-                            Text(LocalizedStringKey(subTitle ?? ""))
+                        if let subTitle = subTitle {
+                            Text(LocalizedStringKey(subTitle))
                                 .font(style?.subTitleFont ?? Font.footnote)
 //                                .opacity(0.7)
                                 .multilineTextAlignment(.center)
@@ -361,20 +369,20 @@ public struct AlertToast: View{
                     .padding(.bottom)
                 Spacer()
             case .loading:
-                ActivityIndicator()
+                 ActivityIndicator(color: style?.activityIndicatorColor ?? .white)
             case .regular:
                 EmptyView()
             }
             
             VStack(spacing: type == .regular ? 8 : 2){
-                if title != nil{
-                    Text(LocalizedStringKey(title ?? ""))
+                if let title = title {
+                    Text(LocalizedStringKey(title))
                         .font(style?.titleFont ?? Font.body.bold())
                         .multilineTextAlignment(.center)
                         .textColor(style?.titleColor ?? nil)
                 }
-                if subTitle != nil{
-                    Text(LocalizedStringKey(subTitle ?? ""))
+                if let subTitle = subTitle {
+                    Text(LocalizedStringKey(subTitle))
                         .font(style?.subTitleFont ?? Font.footnote)
 //                        .opacity(0.7)
                         .multilineTextAlignment(.center)
@@ -401,14 +409,14 @@ public struct AlertToast: View{
     }
 }
 
-@available(iOS 13, macOS 11, *)
+@available(iOS 14, macOS 11, *)
 public struct AlertToastModifier: ViewModifier{
     
     ///Presentation `Binding<Bool>`
     @Binding var isPresenting: Bool
     
     ///Duration time to display the alert
-    @State var duration: Double = 2
+    @State var duration: TimeInterval = 2
     
     ///Tap to dismiss alert
     @State var tapToDismiss: Bool = true
@@ -598,7 +606,7 @@ public struct AlertToastModifier: ViewModifier{
 }
 
 ///Fileprivate View Modifier for dynamic frame when alert type is `.regular` / `.loading`
-@available(iOS 13, macOS 11, *)
+@available(iOS 14, macOS 11, *)
 fileprivate struct WithFrameModifier: ViewModifier{
     
     var withFrame: Bool
@@ -618,14 +626,14 @@ fileprivate struct WithFrameModifier: ViewModifier{
 }
 
 ///Fileprivate View Modifier to change the alert background
-@available(iOS 13, macOS 11, *)
+@available(iOS 14, macOS 11, *)
 fileprivate struct BackgroundModifier: ViewModifier{
     
     var color: Color?
     
     @ViewBuilder
     func body(content: Content) -> some View {
-        if color != nil{
+        if let color = color {
             content
                 .background(color)
         }else{
@@ -636,14 +644,14 @@ fileprivate struct BackgroundModifier: ViewModifier{
 }
 
 ///Fileprivate View Modifier to change the text colors
-@available(iOS 13, macOS 11, *)
+@available(iOS 14, macOS 11, *)
 fileprivate struct TextForegroundModifier: ViewModifier{
     
     var color: Color?
     
     @ViewBuilder
     func body(content: Content) -> some View {
-        if color != nil{
+        if let color = color {
             content
                 .foregroundColor(color)
         }else{
@@ -652,7 +660,7 @@ fileprivate struct TextForegroundModifier: ViewModifier{
     }
 }
 
-@available(iOS 13, macOS 11, *)
+@available(iOS 14, macOS 11, *)
 fileprivate extension Image{
     
     func hudModifier() -> some View{
@@ -664,7 +672,7 @@ fileprivate extension Image{
     }
 }
 
-//@available(iOS 13, macOS 11, *)
+//@available(iOS 14, macOS 11, *)
 public extension View{
     
     /// Return some view w/o frame depends on the condition.
@@ -680,8 +688,37 @@ public extension View{
     ///   - show: Binding<Bool>
     ///   - alert: () -> AlertToast
     /// - Returns: `AlertToast`
-    func toast(isPresenting: Binding<Bool>, duration: Double = 2, tapToDismiss: Bool = true, offsetY: CGFloat = 0, alert: @escaping () -> AlertToast, onTap: (() -> ())? = nil, completion: (() -> ())? = nil) -> some View{
+    func toast(isPresenting: Binding<Bool>, duration: TimeInterval = 2, tapToDismiss: Bool = true, offsetY: CGFloat = 0, alert: @escaping () -> AlertToast, onTap: (() -> ())? = nil, completion: (() -> ())? = nil) -> some View{
         modifier(AlertToastModifier(isPresenting: isPresenting, duration: duration, tapToDismiss: tapToDismiss, offsetY: offsetY, alert: alert, onTap: onTap, completion: completion))
+    }
+    
+    /// Present `AlertToast`.
+    /// - Parameters:
+    ///   - item: Binding<Item?>
+    ///   - alert: (Item?) -> AlertToast
+    /// - Returns: `AlertToast`
+    func toast<Item>(item: Binding<Item?>, duration: Double = 2, tapToDismiss: Bool = true, offsetY: CGFloat = 0, alert: @escaping (Item?) -> AlertToast, onTap: (() -> ())? = nil, completion: (() -> ())? = nil) -> some View where Item : Identifiable {
+        modifier(
+            AlertToastModifier(
+                isPresenting: Binding(
+                    get: {
+                        item.wrappedValue != nil
+                    }, set: { select in
+                        if !select {
+                            item.wrappedValue = nil
+                        }
+                    }
+                ),
+                duration: duration,
+                tapToDismiss: tapToDismiss,
+                offsetY: offsetY,
+                alert: {
+                    alert(item.wrappedValue)
+                },
+                onTap: onTap,
+                completion: completion
+            )
+        )
     }
     
     /// Choose the alert background
