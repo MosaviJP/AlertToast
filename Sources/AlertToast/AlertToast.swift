@@ -612,8 +612,8 @@ fileprivate struct WithFrameModifier: ViewModifier{
     var withFrame: Bool
     
     var maxWidth: CGFloat = 175
-    var maxHeight: CGFloat = 175
-    
+    var maxHeight: CGFloat = 256
+
     @ViewBuilder
     func body(content: Content) -> some View {
         if withFrame{
